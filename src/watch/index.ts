@@ -4,6 +4,7 @@ import { constants as osConstants } from 'os';
 import path from 'path';
 import { command } from 'cleye';
 import { watch } from 'chokidar';
+import micromatch from 'micromatch';
 import { run } from '../run';
 import {
 	removeArgvFlags,
@@ -58,7 +59,18 @@ export const watchCommand = command({
 		noCache: argv.flags.noCache,
 		tsconfigPath: argv.flags.tsconfig,
 		clearScreen: argv.flags.clearScreen,
-		ignore: argv.flags.ignore,
+		ignore: [
+			// Hidden directories like .git
+			'**/.*/**',
+
+			// Hidden files (e.g. logs or temp files)
+			'**/.*',
+
+			// 3rd party packages
+			'**/{node_modules,bower_components,vendor}/**',
+
+			...argv.flags.ignore,
+		],
 		ipc: true,
 	};
 
@@ -92,7 +104,7 @@ export const watchCommand = command({
 						: data.path
 				);
 
-				if (path.isAbsolute(dependencyPath)) {
+				if (path.isAbsolute(dependencyPath) && !micromatch.isMatch(dependencyPath, options.ignore)) {
 					// console.log('adding', dependencyPath);
 					watcher.add(dependencyPath);
 				}
@@ -149,18 +161,7 @@ export const watchCommand = command({
 		{
 			cwd: process.cwd(),
 			ignoreInitial: true,
-			ignored: [
-				// Hidden directories like .git
-				'**/.*/**',
-
-				// Hidden files (e.g. logs or temp files)
-				'**/.*',
-
-				// 3rd party packages
-				'**/{node_modules,bower_components,vendor}/**',
-
-				...options.ignore,
-			],
+			ignored: options.ignore,
 			ignorePermissionErrors: true,
 		},
 	).on('all', reRun);
