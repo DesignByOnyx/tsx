@@ -104,6 +104,7 @@ export const watchCommand = command({
 						: data.path
 				);
 
+				// eslint-disable-next-line max-len
 				if (path.isAbsolute(dependencyPath) && !micromatch.isMatch(dependencyPath, options.ignore)) {
 					// console.log('adding', dependencyPath);
 					watcher.add(dependencyPath);

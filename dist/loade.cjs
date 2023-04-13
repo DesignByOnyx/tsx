@@ -1,1 +1,55 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var s=require("./pkgroll_create-require-eb8410ee.cjs"),c=require("repl"),f=require("@esbuild-kit/core-utils"),a=require("@esbuild-kit/esm-loader");require("module");function d(e){return e&&typeof e=="object"&&"default"in e?e:{default:e}}var u=d(c);function p(e){const{eval:l}=e,i=async function(r,o,t,n){try{r=(await f.transform(r,t,{loader:"ts",tsconfigRaw:{compilerOptions:{preserveValueImports:!0}},define:{require:"global.require"}})).code}catch{}return l.call(this,r,o,t,n)};e.eval=i}const{start:v}=u.default;u.default.start=function(){const e=Reflect.apply(v,this,arguments);return p(e),e},s.require("@esbuild-kit/cjs-loader"),Object.keys(a).forEach(function(e){e!=="default"&&!exports.hasOwnProperty(e)&&Object.defineProperty(exports,e,{enumerable:!0,get:function(){return a[e]}})});
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var pkgroll_createRequire = require('./pkgroll_create-require-b019247d.cjs');
+var repl = require('repl');
+var coreUtils = require('@esbuild-kit/core-utils');
+var esmLoader = require('@esbuild-kit/esm-loader');
+require('module');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var repl__default = /*#__PURE__*/_interopDefaultLegacy(repl);
+
+function patchEval(nodeRepl) {
+  const { eval: defaultEval } = nodeRepl;
+  const preEval = async function(code, context, filename, callback) {
+    try {
+      const transformed = await coreUtils.transform(
+        code,
+        filename,
+        {
+          loader: "ts",
+          tsconfigRaw: {
+            compilerOptions: {
+              preserveValueImports: true
+            }
+          },
+          define: {
+            require: "global.require"
+          }
+        }
+      );
+      code = transformed.code;
+    } catch {
+    }
+    return defaultEval.call(this, code, context, filename, callback);
+  };
+  nodeRepl.eval = preEval;
+}
+const { start } = repl__default["default"];
+repl__default["default"].start = function() {
+  const nodeRepl = Reflect.apply(start, this, arguments);
+  patchEval(nodeRepl);
+  return nodeRepl;
+};
+
+pkgroll_createRequire.require("@esbuild-kit/cjs-loader");
+
+Object.keys(esmLoader).forEach(function (k) {
+	if (k !== 'default' && !exports.hasOwnProperty(k)) Object.defineProperty(exports, k, {
+		enumerable: true,
+		get: function () { return esmLoader[k]; }
+	});
+});

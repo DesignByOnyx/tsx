@@ -1,1 +1,39 @@
-"use strict";var c=require("./pkgroll_create-require-eb8410ee.cjs"),l=require("os");if(require("./suppress-warnings.cjs"),require("module"),c.require("@esbuild-kit/cjs-loader"),process.send){let t=function(e){process.send({type:"kill",signal:e}),process.listenerCount(e)===0&&process.exit(128+l.constants.signals[e])};const r=["SIGINT","SIGTERM"];for(const e of r)process.on(e,t);const{listenerCount:n}=process;process.listenerCount=function(e){let s=Reflect.apply(n,this,arguments);return r.includes(e)&&(s-=1),s};const{listeners:i}=process;process.listeners=function(e){const s=Reflect.apply(i,this,arguments);return r.includes(e)?s.filter(o=>o!==t):s}}
+'use strict';
+
+var pkgroll_createRequire = require('./pkgroll_create-require-b019247d.cjs');
+var require$$2 = require('os');
+require('./suppress-warnings.cjs');
+require('module');
+
+pkgroll_createRequire.require("@esbuild-kit/cjs-loader");
+if (process.send) {
+  let relaySignal = function(signal) {
+    process.send({
+      type: "kill",
+      signal
+    });
+    if (process.listenerCount(signal) === 0) {
+      process.exit(128 + require$$2.constants.signals[signal]);
+    }
+  };
+  const relaySignals = ["SIGINT", "SIGTERM"];
+  for (const signal of relaySignals) {
+    process.on(signal, relaySignal);
+  }
+  const { listenerCount } = process;
+  process.listenerCount = function(eventName) {
+    let count = Reflect.apply(listenerCount, this, arguments);
+    if (relaySignals.includes(eventName)) {
+      count -= 1;
+    }
+    return count;
+  };
+  const { listeners } = process;
+  process.listeners = function(eventName) {
+    const result = Reflect.apply(listeners, this, arguments);
+    if (relaySignals.includes(eventName)) {
+      return result.filter((listener) => listener !== relaySignal);
+    }
+    return result;
+  };
+}

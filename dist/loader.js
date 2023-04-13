@@ -1,1 +1,40 @@
-import{r as l}from"./pkgroll_create-require-ce5b37cd.js";import o from"repl";import{transform as c}from"@esbuild-kit/core-utils";export*from"@esbuild-kit/esm-loader";import"module";function p(r){const{eval:a}=r,s=async function(t,n,e,i){try{t=(await c(t,e,{loader:"ts",tsconfigRaw:{compilerOptions:{preserveValueImports:!0}},define:{require:"global.require"}})).code}catch{}return a.call(this,t,n,e,i)};r.eval=s}const{start:f}=o;o.start=function(){const r=Reflect.apply(f,this,arguments);return p(r),r},l("@esbuild-kit/cjs-loader");
+import { r as require } from './pkgroll_create-require-74379bd7.js';
+import repl from 'repl';
+import { transform } from '@esbuild-kit/core-utils';
+export * from '@esbuild-kit/esm-loader';
+import 'module';
+
+function patchEval(nodeRepl) {
+  const { eval: defaultEval } = nodeRepl;
+  const preEval = async function(code, context, filename, callback) {
+    try {
+      const transformed = await transform(
+        code,
+        filename,
+        {
+          loader: "ts",
+          tsconfigRaw: {
+            compilerOptions: {
+              preserveValueImports: true
+            }
+          },
+          define: {
+            require: "global.require"
+          }
+        }
+      );
+      code = transformed.code;
+    } catch {
+    }
+    return defaultEval.call(this, code, context, filename, callback);
+  };
+  nodeRepl.eval = preEval;
+}
+const { start } = repl;
+repl.start = function() {
+  const nodeRepl = Reflect.apply(start, this, arguments);
+  patchEval(nodeRepl);
+  return nodeRepl;
+};
+
+require("@esbuild-kit/cjs-loader");

@@ -1,3 +1,34 @@
-import l from"repl";import{transform as c}from"@esbuild-kit/core-utils";import{v as i}from"./package-5a2461d7.js";console.log(`Welcome to tsx v${i} (Node.js ${process.version}).
-Type ".help" for more information.`);const e=l.start(),{eval:m}=e,p=async function(r,t,o,s){const n=await c(r,o,{loader:"ts",tsconfigRaw:{compilerOptions:{preserveValueImports:!0}},define:{require:"global.require"}}).catch(a=>(console.log(a.message),{code:`
-`}));return m.call(this,n.code,t,o,s)};e.eval=p;
+import repl from 'repl';
+import { transform } from '@esbuild-kit/core-utils';
+import { v as version } from './package-5a2461d7.js';
+
+console.log(
+  `Welcome to tsx v${version} (Node.js ${process.version}).
+Type ".help" for more information.`
+);
+const nodeRepl = repl.start();
+const { eval: defaultEval } = nodeRepl;
+const preEval = async function(code, context, filename, callback) {
+  const transformed = await transform(
+    code,
+    filename,
+    {
+      loader: "ts",
+      tsconfigRaw: {
+        compilerOptions: {
+          preserveValueImports: true
+        }
+      },
+      define: {
+        require: "global.require"
+      }
+    }
+  ).catch(
+    (error) => {
+      console.log(error.message);
+      return { code: "\n" };
+    }
+  );
+  return defaultEval.call(this, transformed.code, context, filename, callback);
+};
+nodeRepl.eval = preEval;

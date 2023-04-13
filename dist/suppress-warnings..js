@@ -1,1 +1,12 @@
-const t=new Set(["--experimental-loader is an experimental feature. This feature could change at any time","Custom ESM Loaders is an experimental feature. This feature could change at any time","Custom ESM Loaders is an experimental feature and might change at any time"]),{emit:n}=process;process.emit=function(e,a){if(!(e==="warning"&&t.has(a.message)))return Reflect.apply(n,this,arguments)};
+const ignoreWarnings = /* @__PURE__ */ new Set([
+  "--experimental-loader is an experimental feature. This feature could change at any time",
+  "Custom ESM Loaders is an experimental feature. This feature could change at any time",
+  "Custom ESM Loaders is an experimental feature and might change at any time"
+]);
+const { emit } = process;
+process.emit = function(event, warning) {
+  if (event === "warning" && ignoreWarnings.has(warning.message)) {
+    return;
+  }
+  return Reflect.apply(emit, this, arguments);
+};
