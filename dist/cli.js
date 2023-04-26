@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import N$1 from 'tty';
 import { v as version } from './package-5a2461d7.js';
-import { r as require } from './pkgroll_create-require-74379bd7.js';
+import { r as require } from './pkgroll_create-require-a6a8ad2a.js';
 import { pathToFileURL, fileURLToPath } from 'url';
 import require$$0$3 from 'child_process';
 import require$$0$2 from 'path';

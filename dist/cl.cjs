@@ -2,7 +2,7 @@
 
 var N$1 = require('tty');
 var _package = require('./package-eab616d0.cjs');
-var pkgroll_createRequire = require('./pkgroll_create-require-b019247d.cjs');
+var pkgroll_createRequire = require('./pkgroll_create-require-641361fa.cjs');
 var url = require('url');
 var require$$0$3 = require('child_process');
 var require$$0$2 = require('path');

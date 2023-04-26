@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var pkgroll_createRequire = require('./pkgroll_create-require-b019247d.cjs');
+var pkgroll_createRequire = require('./pkgroll_create-require-641361fa.cjs');
 var repl = require('repl');
 var coreUtils = require('@esbuild-kit/core-utils');
 var esmLoader = require('@esbuild-kit/esm-loader');
